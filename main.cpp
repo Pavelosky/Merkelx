@@ -11,7 +11,7 @@ int main()
         // MerkelxMain app{};
         // app.init();
         
-        CSVReader reader;
+        CSVReader reader{};
         return 0;
     }
 
