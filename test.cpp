@@ -28,13 +28,6 @@ std::vector<std::string> tokenise(std::string csvLine, char separator){
 };
 
 int main(){
-    // 
-    // std::string s = "2020/03/17 17:01:24.884492,BTC/USDT,ask,5405.41766912,0.69895055";
-
-    // tokens = tokenise(s, ',');
-    // for (std::string& token : tokens){
-    //     std::cout << token << std::endl;
-    // }
 
     std::ifstream csvFile{"20200317.csv"};
     std::string line;
@@ -48,9 +41,20 @@ int main(){
                 std::cout << "Bad line " << line << std::endl;
                 continue;
             }
-            double price = std::stod(tokens[3]);
-            double amount = std::stod(tokens[4]);
-            std::cout << "Price: " << price << " Amount: " << amount << std::endl;
+            try{
+                double price = std::stod(tokens[3]);
+                double amount = std::stod(tokens[4]);
+                std::cout << "Price: " << price << " Amount: " << amount << std::endl;
+            } 
+            catch (std::exception& e){
+                std::cout << "Bad line " << line << std::endl;
+                std::cout << "Bad float " << tokens[3] << std::endl;
+                std::cout << "Bad float " << tokens[4] << std::endl;
+                break;
+            }
+
+            
+            
 
             for (std::string& token : tokens){
                 std::cout << token << std::endl;
