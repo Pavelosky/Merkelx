@@ -10,8 +10,7 @@ int main()
     std::cout << "Hello, welcome to our trading app. " << std::endl;
         // MerkelxMain app{};
         // app.init();
-        
-        CSVReader reader{};
+        CSVReader::readCSV("20200317.csv");
         return 0;
     }
 
