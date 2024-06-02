@@ -9,7 +9,6 @@ MerkelxMain::MerkelxMain(){
 }
 
 void MerkelxMain::init(){
-    loadOrderBook();
     int input;
     while (true)
     {
@@ -19,11 +18,6 @@ void MerkelxMain::init(){
     }
 }
 
-void MerkelxMain::loadOrderBook(){
-    std::cout << "Loading order book. " << std::endl;
-
-    orders = CSVReader::readCSV("20200317.csv");
-}
 
 void MerkelxMain::printMenu(){
     // 1 print help
@@ -49,23 +43,27 @@ void MerkelxMain::printHelp()
 
 void  MerkelxMain::printMarketStats()
 {
-    std::cout << "Market looks good. " << std::endl;
-    std::cout << "Order book contains " << orders.size() << " entries" << std::endl;
-    unsigned int bids = 0;  
-    unsigned int asks = 0;
-    for (OrderBookEntry& obe : orders)
+    for (std::string const p : orderBook.getKnownProducts())
     {
-        if (obe.orderType == OrderBookType::bid)
-        {
-            bids++;
-        }
-        if (obe.orderType == OrderBookType::ask)
-        {
-            asks++;
-        }
+        std::cout << "Product: " << p << std::endl;
     }
+    // std::cout << "Market looks good. " << std::endl;
+    // std::cout << "Order book contains " << orders.size() << " entries" << std::endl;
+    // unsigned int bids = 0;  
+    // unsigned int asks = 0;
+    // for (OrderBookEntry& obe : orders)
+    // {
+    //     if (obe.orderType == OrderBookType::bid)
+    //     {
+    //         bids++;
+    //     }
+    //     if (obe.orderType == OrderBookType::ask)
+    //     {
+    //         asks++;
+    //     }
+    // }
 
-    std::cout << "There are " << bids << " bids and " << asks << " asks. " << std::endl;
+    // std::cout << "There are " << bids << " bids and " << asks << " asks. " << std::endl;
 }
 
 void MerkelxMain::enterOffer()
