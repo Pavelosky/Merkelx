@@ -8,9 +8,9 @@
 int main()
 {   
     std::cout << "Hello, welcome to our trading app. " << std::endl;
-        MerkelxMain app{};
-        app.init();
-        
-        return 0;
+    MerkelxMain app{};
+    app.init();
+    
+    return 0;
     }
 
