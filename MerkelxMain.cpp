@@ -46,6 +46,12 @@ void  MerkelxMain::printMarketStats()
     for (std::string const p : orderBook.getKnownProducts())
     {
         std::cout << "Product: " << p << std::endl;
+        std::vector<OrderBookEntry> entries = orderBook.getOrders(OrderBookType::ask, p, "2020/03/17 17:01:30.099017");
+
+        std::cout << "Asks: " << entries.size() << std::endl;
+
+        std::cout << "Highest ask price: " << OrderBook::getHighPrice(entries) << std::endl;
+        std::cout << "Lowest ask price: " << OrderBook::getLowPrice(entries) << std::endl;
     }
     // std::cout << "Market looks good. " << std::endl;
     // std::cout << "Order book contains " << orders.size() << " entries" << std::endl;
