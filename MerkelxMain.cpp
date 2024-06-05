@@ -78,23 +78,27 @@ void  MerkelxMain::printMarketStats()
     // std::cout << "There are " << bids << " bids and " << asks << " asks. " << std::endl;
 }
 
+// This function needs to be fixed it seems that it asks for input twice. Changes made tot his function were in the video in week 8 "Making it robust"
 void MerkelxMain::enterAsk()
 {
     std::cout << "Make an Ask - enter the amount: product,price,amount, eg. ETH/BTC,200,0.5 " << std::endl;
     std::string input;
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    
     std::getline(std::cin, input);
+    // std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
     std::vector<std::string> tokens = CSVReader::tokenise(input, ',');
     if (tokens.size() != 3){
-        std::cout << "Bad input" << input << std::endl;
+        std::cout << "Bad input " << input << std::endl;
     }
     else{
-        OrderBookEntry obe = CSVReader::stringsToOBE(tokens[1], tokens[2], currentTime, tokens[2], OrderBookType::ask);
+        try{
+            OrderBookEntry obe = CSVReader::stringsToOBE(tokens[1], tokens[2], currentTime, tokens[2], OrderBookType::ask);
+        }
+        catch (const std::exception& e){
+            std::cout << "MerkelxMain::enter Ask Bad input " << input << std::endl;
+        }
     }
-
-    
-
     std::cout << "You entered: " << input << std::endl;
 }
 
@@ -116,10 +120,17 @@ void MerkelxMain::gotoNextTimeframe()
  
 int MerkelxMain::getUserOption()
 {
-    int userOption;
+    int userOption = 0;
 
+    std::string line;
     std::cout << "Type in 1-6" << std::endl;
-    std::cin >> userOption;
+    std::getline(std::cin, line);
+    try{
+        userOption = std::stoi(line);
+    }
+    catch (const std::exception& e){
+
+    }
     std::cout << "You chose: " << userOption << std::endl;
     return userOption;
 }
