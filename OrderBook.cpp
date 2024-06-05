@@ -84,4 +84,40 @@ void OrderBook::insertOrder(OrderBookEntry& order){
     std::sort(orders.begin(), orders.end(), OrderBookEntry::compareByTimestamp);
 }
 
+std::vector<OrderBookEntry> OrderBook::matchAsksToBids(std::string product, std::string timestamp){
+    std::vector<OrderBookEntry> bids = getOrders(OrderBookType::bid, product, timestamp);
+    std::vector<OrderBookEntry> asks = getOrders(OrderBookType::ask, product, timestamp);
+    
+    std::vector<OrderBookEntry> sales;
+
+    std::sort(bids.begin(), bids.end(), OrderBookEntry::compareByPriceDesc);
+    std::sort(asks.begin(), asks.end(), OrderBookEntry::compareByPriceAsc);
+    
+    for (OrderBookEntry& a : asks){
+        for (OrderBookEntry& b : bids){
+            if (b.price >= a.price){
+                OrderBookEntry sale{a.price, 0, timestamp, product, OrderBookType::bid};
+                if(b.amount == a.amount){
+                    sale.amount = a.amount;
+                    sales.push_back(sale);
+                    b.amount = 0;
+                }
+                if(b.amount > a.amount){
+                    sale.amount = a.amount;
+                    sales.push_back(sale);
+                    b.amount -= a.amount;
+                    break;
+                }
+                if(b.amount < a.amount){
+                    sale.amount = b.amount;
+                    sales.push_back(sale);
+                    a.amount -= b.amount;
+                    b.amount = 0;
+                    continue;
+                }
+            }
+        }
+    }
+    return sales;
+}
 
