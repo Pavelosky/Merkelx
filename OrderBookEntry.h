@@ -15,4 +15,8 @@ class OrderBookEntry{
         std::string timestamp;
         std::string product;
         OrderBookType orderType;
+
+        static bool compareByTimestamp(const OrderBookEntry& e1, const OrderBookEntry& e2){
+            return e1.timestamp < e2.timestamp;
+        }
 };

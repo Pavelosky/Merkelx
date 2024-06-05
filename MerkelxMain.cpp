@@ -93,7 +93,8 @@ void MerkelxMain::enterAsk()
     }
     else{
         try{
-            OrderBookEntry obe = CSVReader::stringsToOBE(tokens[1], tokens[2], currentTime, tokens[2], OrderBookType::ask);
+            OrderBookEntry obe = CSVReader::stringsToOBE(tokens[1], tokens[2], currentTime, tokens[0], OrderBookType::ask);
+            orderBook.insertOrder(obe);
         }
         catch (const std::exception& e){
             std::cout << "MerkelxMain::enter Ask Bad input " << input << std::endl;
