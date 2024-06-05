@@ -3,6 +3,7 @@
 #include <vector>
 #include "OrderBookEntry.h"
 #include "CSVReader.h"
+#include <limits>
 
 MerkelxMain::MerkelxMain(){
 
@@ -26,7 +27,7 @@ void MerkelxMain::printMenu(){
     // 2 print exchange stats
     std::cout << "2: Print exchange stats" << std::endl;
     // 3 make an offer
-    std::cout << "3: Make an offer " << std::endl;
+    std::cout << "3: Make an Ask " << std::endl;
     // 4 make a bid 
     std::cout << "4: Make a bid " << std::endl;
     // 5 print wallet
@@ -77,9 +78,24 @@ void  MerkelxMain::printMarketStats()
     // std::cout << "There are " << bids << " bids and " << asks << " asks. " << std::endl;
 }
 
-void MerkelxMain::enterOffer()
+void MerkelxMain::enterAsk()
 {
-    std::cout << "Mark and offer - enter the amount " << std::endl;
+    std::cout << "Make an Ask - enter the amount: product,price,amount, eg. ETH/BTC,200,0.5 " << std::endl;
+    std::string input;
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::getline(std::cin, input);
+
+    std::vector<std::string> tokens = CSVReader::tokenise(input, ',');
+    if (tokens.size() != 3){
+        std::cout << "Bad input" << input << std::endl;
+    }
+    else{
+        OrderBookEntry obe = CSVReader::stringsToOBE(tokens[1], tokens[2], currentTime, tokens[2], OrderBookType::ask);
+    }
+
+    
+
+    std::cout << "You entered: " << input << std::endl;
 }
 
 void MerkelxMain::enterBid()
@@ -124,7 +140,7 @@ void MerkelxMain::processUserOption(int userOption){
     }
     if (userOption == 3) // bad input
     {
-        enterOffer();
+        enterAsk();
     }
     if (userOption == 4) // bad input
     {

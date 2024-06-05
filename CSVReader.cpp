@@ -63,9 +63,9 @@ OrderBookEntry CSVReader::stringsToOBE(std::vector<std::string> tokens){
         amount = std::stod(tokens[4]);
     } 
     catch (const std::exception& e){
-        std::cout << "Bad line " << std::endl;
-        std::cout << "Bad float " << tokens[3] << std::endl;
-        std::cout << "Bad float " << tokens[4] << std::endl;
+        std::cout << "CSVReader::stringsToOBE Bad line " << std::endl;
+        std::cout << "CSVReader::stringsToOBE Bad float " << tokens[3] << std::endl;
+        std::cout << "CSVReader::stringsToOBE Bad float " << tokens[4] << std::endl;
         throw std::exception();
     }
     
@@ -74,5 +74,30 @@ OrderBookEntry CSVReader::stringsToOBE(std::vector<std::string> tokens){
                         tokens[0],
                         tokens[1],
                         OrderBookEntry::stringToOrderBookType(tokens[2])};
+    return obe;
+}
+
+OrderBookEntry CSVReader::stringsToOBE(std::string priceString,
+                                            std::string amountString,
+                                            std::string timestamp,
+                                            std::string product,
+                                            OrderBookType OrderBookType){
+    double price, amount;
+    try{
+        price = std::stod(priceString);
+        amount = std::stod(amountString);
+    } 
+    catch (const std::exception& e){
+        std::cout << "CSVReader::stringsToOBE Bad line " << std::endl;
+        std::cout << "CSVReader::stringsToOBE Bad float " << price << std::endl;
+        std::cout << "CSVReader::stringsToOBE Bad float " << amount << std::endl;
+        throw std::exception();
+    }                                       
+    OrderBookEntry obe{price,
+                        amount,
+                        timestamp,
+                        product,
+                        OrderBookType};
+
     return obe;
 }
