@@ -12,6 +12,9 @@ MerkelxMain::MerkelxMain(){
 void MerkelxMain::init(){
     int input;
     currentTime = orderBook.getEarliestTime();
+
+    wallet.insertCurrency("BTC", 5);
+
     while (true)
     {
         printMenu();
@@ -111,11 +114,18 @@ void MerkelxMain::enterBid()
 void MerkelxMain::printWallet()
 {
     std::cout << "Your wallet is empty. " << std::endl;
+    std::cout << "You have: " << wallet.toString() << " BTC" << std::endl;
 }
         
 void MerkelxMain::gotoNextTimeframe()
 {
     std::cout << "Going to next time frame. " << std::endl;
+    std::vector<OrderBookEntry> sales = orderBook.matchAsksToBids("ETH/BTC", currentTime);
+    std::cout << "Sales: " << sales.size() << std::endl;
+    for (OrderBookEntry& sale : sales)
+    {
+        std::cout << "Sale price: " << sale.price << " || Sale amount: " << sale.amount << " || Sale time: " << sale.timestamp << std::endl;
+    }
     currentTime = orderBook.getNextTime(currentTime);
 }
  
