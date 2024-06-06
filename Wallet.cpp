@@ -23,7 +23,12 @@ Wallet::Wallet(){
 
     bool Wallet::containsCurrency(std::string type, double amount){
         //check if the wallet contains this much currency
-        return false;
+        if (currencies.count(type) == 0){
+            return false;
+        }
+        else{
+            return currencies[type] >= amount;
+        }
     }
 
     std::string Wallet::toString(){

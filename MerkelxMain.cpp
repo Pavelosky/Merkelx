@@ -54,8 +54,10 @@ void  MerkelxMain::printMarketStats()
     {
         std::cout << "Product: " << p << std::endl;
         std::vector<OrderBookEntry> entries = orderBook.getOrders(OrderBookType::ask, p, currentTime);
+        std::vector<OrderBookEntry> bids = orderBook.getOrders(OrderBookType::bid, p, currentTime);
 
         std::cout << "Asks: " << entries.size() << std::endl;
+        std::cout << "Bids: " << bids.size() << std::endl;
 
         std::cout << "Highest ask price: " << OrderBook::getHighPrice(entries) << std::endl;
         std::cout << "Lowest ask price: " << OrderBook::getLowPrice(entries) << std::endl;
@@ -108,7 +110,25 @@ void MerkelxMain::enterAsk()
 
 void MerkelxMain::enterBid()
 {
-    std::cout << "Make a bid - enter the amount" << std::endl;
+    std::cout << "Make a bid - enter the amount: product,price,amount, eg. ETH/BTC,200,0.5 " << std::endl;
+    std::string input;
+
+    std::getline(std::cin, input);
+
+    std::vector<std::string> tokens = CSVReader::tokenise(input, ',');
+    if (tokens.size() != 3){
+        std::cout << "Bad input " << input << std::endl;
+    }
+    else{
+        try{
+            OrderBookEntry obe = CSVReader::stringsToOBE(tokens[1], tokens[2], currentTime, tokens[0], OrderBookType::bid);
+            orderBook.insertOrder(obe);
+        }
+        catch (const std::exception& e){
+            std::cout << "MerkelxMain::enter Bid Bad input " << input << std::endl;
+        }
+    }
+    std::cout << "You entered: " << input << std::endl;
 }
 
 void MerkelxMain::printWallet()
