@@ -1,4 +1,5 @@
 #include "Wallet.h"
+#include "CSVReader.h"
 
 Wallet::Wallet(){
     //initialize the wallet with 0 currency
@@ -62,3 +63,23 @@ Wallet::Wallet(){
         }
         return s;
     }
+
+    bool Wallet::canFulfillOrder(OrderBookEntry order){
+
+        std::vector<std::string> currs = CSVReader::tokenise(order.product, '/');
+        //ask
+        if (order.orderType == OrderBookType::ask){
+            double amount = order.amount;
+            std::string currency = currs[0];
+            std::cout << "Wallet::canFulfillOrder: " << currency << " " << amount << std::endl;
+            return containsCurrency(currency, amount);
+        }
+        //bid
+        if(order.orderType == OrderBookType::bid){
+            double amount = order.amount * order.price;
+            std::string currency = currs[1]; 
+            return containsCurrency(currency, amount);
+        }
+        return false;
+    }
+            

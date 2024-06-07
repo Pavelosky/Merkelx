@@ -100,7 +100,15 @@ void MerkelxMain::enterAsk()
     else{
         try{
             OrderBookEntry obe = CSVReader::stringsToOBE(tokens[1], tokens[2], currentTime, tokens[0], OrderBookType::ask);
-            orderBook.insertOrder(obe);
+            if(wallet.canFulfillOrder(obe)){
+                std::cout << "Order is valid. " << std::endl;
+                orderBook.insertOrder(obe);
+            }
+            else{
+                std::cout << "Order is invalid. Insufficient funds " << std::endl;
+            }
+
+            
         }
         catch (const std::exception& e){
             std::cout << "MerkelxMain::enter Ask Bad input " << input << std::endl;
