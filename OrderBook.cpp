@@ -2,6 +2,8 @@
 #include "OrderBook.h"
 #include "CSVReader.h"
 #include <algorithm>
+#include "OrderBookEntry.h"
+
 
 OrderBook::OrderBook(std::string filename){
 
@@ -96,7 +98,22 @@ std::vector<OrderBookEntry> OrderBook::matchAsksToBids(std::string product, std:
     for (OrderBookEntry& a : asks){
         for (OrderBookEntry& b : bids){
             if (b.price >= a.price){
-                OrderBookEntry sale{a.price, 0, timestamp, product, OrderBookType::bid};
+                
+                OrderBookEntry sale{a.price, 0, timestamp, product, OrderBookType::asksale};
+
+
+                if (b.username == "simuser" ){
+                    sale.username = "simuser";
+                    sale.orderType = OrderBookType::bidsale;
+
+                if (a.username == "simuser" ){
+                    sale.username = "simuser";
+                    sale.orderType = OrderBookType::asksale;
+                }
+
+
+
+
                 if(b.amount == a.amount){
                     sale.amount = a.amount;
                     sales.push_back(sale);

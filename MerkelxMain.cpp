@@ -85,8 +85,7 @@ void  MerkelxMain::printMarketStats()
 }
 
 // This function needs to be fixed it seems that it asks for input twice. Changes made tot his function were in the video in week 8 "Making it robust"
-void MerkelxMain::enterAsk()
-{
+void MerkelxMain::enterAsk(){
     std::cout << "Make an Ask - enter the amount: product,price,amount, eg. ETH/BTC,200,0.5 " << std::endl;
     std::string input;
     
@@ -100,6 +99,7 @@ void MerkelxMain::enterAsk()
     else{
         try{
             OrderBookEntry obe = CSVReader::stringsToOBE(tokens[1], tokens[2], currentTime, tokens[0], OrderBookType::ask);
+            obe.username = "simuser";
             if(wallet.canFulfillOrder(obe)){
                 std::cout << "Order is valid. " << std::endl;
                 orderBook.insertOrder(obe);
@@ -117,9 +117,8 @@ void MerkelxMain::enterAsk()
     std::cout << "You entered: " << input << std::endl;
 }
 
-void MerkelxMain::enterBid()
-{
-    std::cout << "Make a bid - enter the amount: product,price,amount, eg. ETH/BTC,200,0.5 " << std::endl;
+void MerkelxMain::enterBid(){
+    std::cout << "Make a Bid - enter the amount: product,price,amount, eg. ETH/BTC,200,0.5 " << std::endl;
     std::string input;
 
     std::getline(std::cin, input);
@@ -131,7 +130,14 @@ void MerkelxMain::enterBid()
     else{
         try{
             OrderBookEntry obe = CSVReader::stringsToOBE(tokens[1], tokens[2], currentTime, tokens[0], OrderBookType::bid);
-            orderBook.insertOrder(obe);
+            obe.username = "simuser";
+            if(wallet.canFulfillOrder(obe)){
+                std::cout << "Order is valid. " << std::endl;
+                orderBook.insertOrder(obe);
+            }
+            else{
+                std::cout << "Order is invalid. Insufficient funds " << std::endl;
+            }
         }
         catch (const std::exception& e){
             std::cout << "MerkelxMain::enter Bid Bad input " << input << std::endl;
