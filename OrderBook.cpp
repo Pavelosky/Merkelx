@@ -92,45 +92,63 @@ std::vector<OrderBookEntry> OrderBook::matchAsksToBids(std::string product, std:
     
     std::vector<OrderBookEntry> sales;
 
-    std::sort(bids.begin(), bids.end(), OrderBookEntry::compareByPriceDesc);
+
+    // I put in a little check to ensure we have bids and asks
+    // to process.
+    if (asks.size() == 0 || bids.size() == 0)
+    {
+        std::cout << " OrderBook::matchAsksToBids no bids or asks" << std::endl;
+        return sales;
+    }
+
     std::sort(asks.begin(), asks.end(), OrderBookEntry::compareByPriceAsc);
+    std::sort(bids.begin(), bids.end(), OrderBookEntry::compareByPriceDesc);
+    
+    std::cout << "max ask " << asks[asks.size()-1].price << std::endl;
+    std::cout << "min ask " << asks[0].price << std::endl;
+    std::cout << "max bid " << bids[0].price << std::endl;
+    std::cout << "min bid " << bids[bids.size()-1].price << std::endl;
+
     
     for (OrderBookEntry& a : asks){
         for (OrderBookEntry& b : bids){
             if (b.price >= a.price){
                 
                 OrderBookEntry sale{a.price, 0, timestamp, product, OrderBookType::asksale};
-
+    
                 if (b.username == "simuser" ){
                     sale.username = "simuser";
                     sale.orderType = OrderBookType::bidsale;
-
+                }
+    
                 if (a.username == "simuser" ){
                     sale.username = "simuser";
                     sale.orderType = OrderBookType::asksale;
                 }
-
+    
                 if(b.amount == a.amount){
                     sale.amount = a.amount;
                     sales.push_back(sale);
                     b.amount = 0;
+                    break;
                 }
+    
                 if(b.amount > a.amount){
                     sale.amount = a.amount;
                     sales.push_back(sale);
                     b.amount -= a.amount;
                     break;
                 }
-                if(b.amount < a.amount){
+    
+                if(b.amount < a.amount && b.amount > 0){
                     sale.amount = b.amount;
                     sales.push_back(sale);
                     a.amount -= b.amount;
                     b.amount = 0;
                     continue;
                 }
-                }
             }
-        }
-        return sales;
+        }    
     }
+    return sales;
 };
