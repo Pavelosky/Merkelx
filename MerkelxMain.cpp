@@ -155,13 +155,23 @@ void MerkelxMain::printWallet()
 void MerkelxMain::gotoNextTimeframe()
 {
     std::cout << "Going to next time frame. " << std::endl;
-    std::vector<OrderBookEntry> sales = orderBook.matchAsksToBids("ETH/BTC", currentTime);
-    std::cout << "Sales: " << sales.size() << std::endl;
-    for (OrderBookEntry& sale : sales)
+
+    for(std::string const p : orderBook.getKnownProducts())
     {
-        std::cout << "Sale price: " << sale.price << " || Sale amount: " << sale.amount << " || Sale time: " << sale.timestamp << std::endl;
+        std::cout << "Matching asks and bids for product: " << p << std::endl;
+        
+        std::vector<OrderBookEntry> sales = orderBook.matchAsksToBids(p, currentTime);
+        std::cout << "Sales: " << sales.size() << std::endl;
+        for (OrderBookEntry& sale : sales)
+        {
+            std::cout << "Sale price: " << sale.price << " || Sale amount: " << sale.amount << " || Sale time: " << sale.timestamp << std::endl;
+            if (sale.username == "simuser")
+            {
+                wallet.processSale(sale);
+            }
+        }
+        currentTime = orderBook.getNextTime(currentTime);
     }
-    currentTime = orderBook.getNextTime(currentTime);
 }
  
 int MerkelxMain::getUserOption()
